@@ -1,0 +1,142 @@
+<html>
+<head>
+  <title>QuizTime – Interactive</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #fff;
+    }
+    .container {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      padding: 25px;
+      width: 380px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      animation: pop 0.5s ease;
+    }
+    @keyframes pop {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    #question {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .option {
+      margin: 10px 0;
+      padding: 10px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option:hover {
+      background: rgba(255,255,255,0.4);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #00eaff;
+      border: none;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+      color: #000;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #00bcd4;
+    }
+
+    #progress {
+      margin-top: 10px;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="progress"></div>
+    <h2 id="question">Question text</h2>
+    <div id="options"></div>
+    <button onclick="nextQuestion()">Next</button>
+    <h3 id="result"></h3>
+  </div>
+
+  <script>
+    const quiz = [
+      { question: "What does HTML stand for?", options: ["Hyper Text Markup Language", "High Tech Machine Language", "Home Tool Markup Link"], answer: 0 },
+      { question: "Which one is a programming language?", options: ["HTML", "CSS", "JavaScript"], answer: 2 },
+      { question: "Git is used for?", options: ["Editing photos", "Version control", "Watching videos"], answer: 1 },
+      { question: "Which tag is used to link CSS in HTML?", options: ["<style>", "<link>", "<script>"], answer: 1 },
+      { question: "Which company created JavaScript?", options: ["Google", "Netscape", "Microsoft"], answer: 1 },
+      { question: "CSS is used for?", options: ["Structure", "Styling", "Database"], answer: 1 },
+      { question: "Which symbol is used for comments in JavaScript?", options: ["//", "#", "<!-- -->"], answer: 0 },
+      { question: "Which HTML tag is used for the largest heading?", options: ["<h6>", "<h1>", "<header>"], answer: 1 },
+      { question: "Which command is used to check Git status?", options: ["git check", "git status", "git verify"], answer: 1 },
+      { question: "Which language runs in a browser?", options: ["Java", "C", "JavaScript"], answer: 2 }
+    ];
+
+    let index = 0;
+    let score = 0;
+    let selectedOption = null;
+
+    function loadQuestion() {
+      selectedOption = null;
+      document.getElementById("result").innerText = "";
+
+      const q = quiz[index];
+      document.getElementById("question").innerText = q.question;
+      document.getElementById("progress").innerText = Question ${index + 1} of ${quiz.length};
+
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+
+      q.options.forEach((opt, i) => {
+        const div = document.createElement("div");
+        div.className = "option";
+        div.innerText = opt;
+        div.onclick = () => {
+          selectedOption = i;
+          document.querySelectorAll('.option').forEach(o => o.style.background = "rgba(255,255,255,0.25)");
+          div.style.background = "rgba(0,255,255,0.6)";
+        };
+        optionsDiv.appendChild(div);
+      });
+    }
+
+    function nextQuestion() {
+      if (selectedOption === null) {
+        alert("Please select an option!");
+        return;
+      }
+
+      if (selectedOption === quiz[index].answer) score++;
+      index++;
+
+      if (index < quiz.length) {
+        loadQuestion();
+      } else {
+        document.getElementById("question").innerText = "Quiz Completed!";
+        document.getElementById("options").innerHTML = "";
+        document.getElementById("progress").innerText = "";
+        document.getElementById("result").innerText = Your Score: ${score} / ${quiz.length};
+      }
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
